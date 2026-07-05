@@ -21,6 +21,13 @@ Este archivo es el contexto de referencia para cualquier agente (Claude u otro) 
 8. **Cada misión termina verificando.** Antes de dar una tarea por terminada, ejecuta las comprobaciones disponibles del proyecto: `npm run lint`, `npm run typecheck` y `npm run build`. Corrige cualquier error antes de reportar éxito.
 9. **Preparado para crecer.** El proyecto debe mantenerse listo para integrar Supabase (base de datos y autenticación), la instalación como PWA, y futuras integraciones con wearables, sin necesidad de reestructurar la base del proyecto.
 
+## Atribución de Git (GIT ATTRIBUTION)
+
+- Todos los commits deben quedar atribuidos únicamente al usuario humano de Git configurado.
+- Nunca añadas a Claude, Anthropic, asistentes de IA o agentes como coautores.
+- Nunca añadas trailers `Co-Authored-By` relacionados con IA salvo que el usuario lo pida explícitamente.
+- El desarrollo asistido por IA puede documentarse de forma transparente en `README.md`, pero las herramientas de IA no deben aparecer como autores o coautores de commits en Git.
+
 ## Stack tecnológico
 
 - React + TypeScript
