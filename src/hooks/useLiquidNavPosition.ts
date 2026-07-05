@@ -25,17 +25,23 @@ interface DragState {
   startClientY: number;
   startX: number;
   startY: number;
+  lastClientX: number;
   dragging: boolean;
 }
+
+const MAX_TILT_DEG = 4;
 
 /**
  * Owns the floating control's on-screen position: initial centering,
  * pointer-driven dragging (with click/drag disambiguation), viewport
- * clamping, and localStorage persistence.
+ * clamping, localStorage persistence, and a small organic tilt that
+ * reacts to drag velocity (purely cosmetic — position tracking itself
+ * stays 1:1 with the pointer).
  */
 export function useLiquidNavPosition({ elementRef, disabled = false }: UseLiquidNavPositionOptions) {
   const [position, setPosition] = useState<Position | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [tilt, setTilt] = useState(0);
 
   const dragRef = useRef<DragState | null>(null);
   const draggedRef = useRef(false);
@@ -98,6 +104,7 @@ export function useLiquidNavPosition({ elementRef, disabled = false }: UseLiquid
         startClientY: event.clientY,
         startX: position.x,
         startY: position.y,
+        lastClientX: event.clientX,
         dragging: false,
       };
     },
@@ -121,6 +128,11 @@ export function useLiquidNavPosition({ elementRef, disabled = false }: UseLiquid
       }
 
       event.preventDefault();
+
+      const stepDx = event.clientX - drag.lastClientX;
+      drag.lastClientX = event.clientX;
+      setTilt(Math.max(-MAX_TILT_DEG, Math.min(MAX_TILT_DEG, stepDx * 0.5)));
+
       setPosition(clampCurrent(drag.startX + dx, drag.startY + dy));
     },
     [clampCurrent],
@@ -133,6 +145,7 @@ export function useLiquidNavPosition({ elementRef, disabled = false }: UseLiquid
 
       if (drag.dragging) {
         setIsDragging(false);
+        setTilt(0);
         setPosition((prev) => {
           if (!prev) return prev;
           const clamped = clampCurrent(prev.x, prev.y);
@@ -178,6 +191,7 @@ export function useLiquidNavPosition({ elementRef, disabled = false }: UseLiquid
   return {
     position,
     isDragging,
+    tilt,
     consumeDragFlag,
     nudge,
     resetPosition,

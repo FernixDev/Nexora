@@ -1,5 +1,19 @@
 /* --- La pieza de cristal flotante --- */
 .liquid-nav {
+  /* Ajuste de cristal específico de este control (no son tokens globales:
+     esta pieza necesita ser notablemente más transparente que el resto
+     de superficies glass de la app). */
+  --liquid-bg-1: rgba(255, 255, 255, 0.34);
+  --liquid-bg-2: rgba(255, 255, 255, 0.12);
+  --liquid-border: rgba(255, 255, 255, 0.5);
+  --liquid-sheen-1: 0.5;
+  --liquid-sheen-2: 0.4;
+  --liquid-blur: var(--glass-blur-md);
+  --liquid-saturation: 180%;
+  --liquid-easing-organic: cubic-bezier(0.32, 1.15, 0.4, 1);
+  --liquid-easing-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --liquid-tilt: 0deg;
+
   position: fixed;
   left: 0;
   top: 0;
@@ -12,32 +26,66 @@
   max-width: calc(100vw - 2 * var(--space-sm));
   max-height: calc(100vh - 2 * var(--space-sm));
   border-radius: var(--radius-full);
-  border: 1px solid var(--color-glass-border);
-  background: linear-gradient(165deg, var(--color-surface-glass-strong) 0%, var(--color-surface-glass) 100%);
-  box-shadow: var(--elevation-3), inset 0 1px 0 var(--color-glass-highlight),
-    inset 0 -12px 20px -16px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(var(--glass-blur-md)) saturate(var(--glass-saturation));
-  -webkit-backdrop-filter: blur(var(--glass-blur-md)) saturate(var(--glass-saturation));
+  border: 1px solid var(--liquid-border);
+  background: linear-gradient(160deg, var(--liquid-bg-1) 0%, var(--liquid-bg-2) 100%);
+  box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -10px 18px -16px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturation));
+  -webkit-backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturation));
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
   cursor: grab;
-  transition: border-radius var(--duration-normal) var(--easing-standard),
+  rotate: var(--liquid-tilt);
+  scale: 1;
+  transition: border-radius var(--duration-normal) var(--liquid-easing-organic),
     box-shadow var(--duration-normal) var(--easing-standard),
     backdrop-filter var(--duration-normal) var(--easing-standard),
-    transform var(--duration-fast) var(--easing-standard);
+    background var(--duration-normal) var(--easing-standard),
+    translate var(--duration-normal) var(--liquid-easing-settle),
+    rotate 90ms ease-out,
+    scale var(--duration-fast) var(--easing-standard);
 }
 
-/* Reflejo/sheen sutil, sin efecto neón */
+@media (prefers-color-scheme: dark) {
+  .liquid-nav {
+    --liquid-bg-1: rgba(255, 255, 255, 0.1);
+    --liquid-bg-2: rgba(125, 155, 255, 0.05);
+    --liquid-border: rgba(255, 255, 255, 0.14);
+  }
+}
+
+/* Reflejo superior — sheen suave, no glow estático */
 .liquid-nav::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 0;
   border-radius: inherit;
-  background: radial-gradient(120% 60% at 22% -15%, rgba(255, 255, 255, 0.4), transparent 60%);
-  opacity: 0.55;
+  background: radial-gradient(140% 70% at 20% -20%, rgba(255, 255, 255, 0.55), transparent 55%);
+  opacity: var(--liquid-sheen-1);
   pointer-events: none;
   transition: opacity var(--duration-normal) var(--easing-standard);
+}
+
+/* Velo de profundidad/refracción — se desplaza y gana presencia al abrir */
+.liquid-nav::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(125, 155, 255, 0.14) 0%, transparent 42%, transparent 60%, rgba(
+          255,
+          255,
+          255,
+          0.12
+        ) 100%);
+  opacity: var(--liquid-sheen-2);
+  translate: 0 0;
+  pointer-events: none;
+  transition: opacity var(--duration-normal) var(--easing-standard),
+    translate var(--duration-normal) var(--liquid-easing-organic);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -49,23 +97,70 @@
 .liquid-nav--open {
   cursor: default;
   border-radius: var(--radius-panel);
-  backdrop-filter: blur(var(--glass-blur-lg)) saturate(calc(var(--glass-saturation) + 25%));
-  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(calc(var(--glass-saturation) + 25%));
-  box-shadow: var(--elevation-3), inset 0 1px 0 var(--color-glass-highlight),
-    inset 0 -14px 26px -16px rgba(0, 0, 0, 0.28);
+  --liquid-bg-1: rgba(255, 255, 255, 0.4);
+  --liquid-bg-2: rgba(255, 255, 255, 0.16);
+  --liquid-blur: var(--glass-blur-lg);
+  --liquid-saturation: 200%;
+  --liquid-sheen-2: 0.7;
+  box-shadow: var(--elevation-3), inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -14px 26px -16px rgba(0, 0, 0, 0.24);
+}
+
+.liquid-nav--open::after {
+  translate: -3% -3%;
+}
+
+@media (prefers-color-scheme: dark) {
+  .liquid-nav--open {
+    --liquid-bg-1: rgba(255, 255, 255, 0.13);
+    --liquid-bg-2: rgba(125, 155, 255, 0.08);
+  }
 }
 
 .liquid-nav--dragging {
   cursor: grabbing;
+  scale: 1.018;
+  --liquid-bg-1: rgba(255, 255, 255, 0.42);
+  --liquid-bg-2: rgba(255, 255, 255, 0.18);
+  --liquid-blur: calc(var(--glass-blur-md) + 6px);
+  --liquid-saturation: 205%;
+  --liquid-sheen-2: 0.85;
   transition: box-shadow var(--duration-fast) var(--easing-standard),
-    backdrop-filter var(--duration-fast) var(--easing-standard);
-  box-shadow: var(--elevation-3), 0 22px 44px rgba(0, 0, 0, 0.22), inset 0 1px 0 var(--color-glass-highlight);
-  backdrop-filter: blur(calc(var(--glass-blur-md) + 4px)) saturate(calc(var(--glass-saturation) + 15%));
-  -webkit-backdrop-filter: blur(calc(var(--glass-blur-md) + 4px)) saturate(calc(var(--glass-saturation) + 15%));
+    backdrop-filter var(--duration-fast) var(--easing-standard),
+    background var(--duration-fast) var(--easing-standard),
+    rotate 90ms ease-out,
+    scale var(--duration-fast) var(--liquid-easing-organic);
+  box-shadow: var(--elevation-3), 0 22px 44px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-.liquid-nav--dragging .liquid-nav__item {
-  transform: scale(1.03);
+@media (prefers-color-scheme: dark) {
+  .liquid-nav--dragging {
+    --liquid-bg-1: rgba(255, 255, 255, 0.15);
+    --liquid-bg-2: rgba(125, 155, 255, 0.09);
+  }
+}
+
+/* --- Indicador líquido: una única masa que se desliza entre destinos --- */
+.liquid-nav__indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  border-radius: var(--radius-full);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.55) 0%, var(--color-brand-soft) 65%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -6px 10px -8px rgba(0, 0, 0, 0.14);
+  pointer-events: none;
+  will-change: translate, width, height;
+  transition: translate var(--duration-normal) var(--liquid-easing-organic),
+    width var(--duration-normal) var(--liquid-easing-organic),
+    height var(--duration-normal) var(--liquid-easing-organic),
+    border-radius var(--duration-normal) var(--liquid-easing-organic);
+}
+
+@media (prefers-color-scheme: dark) {
+  .liquid-nav__indicator {
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.16) 0%, var(--color-brand-soft) 65%);
+  }
 }
 
 /* --- Direcciones de expansión --- */
@@ -90,6 +185,7 @@
 /* --- Ítems --- */
 .liquid-nav__item {
   position: relative;
+  z-index: 2;
   flex: none;
   display: inline-flex;
   align-items: center;
@@ -108,17 +204,20 @@
   opacity: 0;
   pointer-events: none;
   -webkit-tap-highlight-color: transparent;
-  transition: max-width var(--duration-normal) var(--easing-standard),
-    max-height var(--duration-normal) var(--easing-standard),
-    padding var(--duration-normal) var(--easing-standard),
+  transition: max-width var(--duration-normal) var(--liquid-easing-organic),
+    max-height var(--duration-normal) var(--liquid-easing-organic),
+    padding var(--duration-normal) var(--liquid-easing-organic),
     opacity var(--duration-fast) var(--easing-standard),
-    background-color var(--duration-fast) var(--easing-standard),
-    color var(--duration-fast) var(--easing-standard),
-    transform var(--duration-fast) var(--easing-standard);
+    color var(--duration-normal) var(--easing-standard);
 }
 
 .liquid-nav__item:focus-visible {
   border-radius: var(--radius-full);
+}
+
+.liquid-nav__icon {
+  display: inline-flex;
+  transition: scale var(--duration-normal) var(--liquid-easing-organic);
 }
 
 .liquid-nav__item svg {
@@ -135,7 +234,8 @@
   display: none;
 }
 
-/* El destino activo siempre es visible: es el ancla de la transformación */
+/* El destino activo siempre es visible; su "masa" vive en el indicador,
+   no en el propio botón — así puede desplazarse como una única pieza. */
 .liquid-nav__item--active {
   max-width: 220px;
   max-height: 48px;
@@ -143,12 +243,15 @@
   padding: var(--space-2xs) var(--space-xs);
   opacity: 1;
   pointer-events: auto;
-  background: var(--color-brand-soft);
   color: var(--color-brand);
 }
 
 .liquid-nav__item--active .liquid-nav__label {
   display: inline;
+}
+
+.liquid-nav__item--active .liquid-nav__icon {
+  scale: 1.1;
 }
 
 /* Abierto en horizontal: en móvil los inactivos emergen solo con icono */
@@ -217,8 +320,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .liquid-nav {
+    rotate: 0deg !important;
+    scale: 1 !important;
+  }
+
   .liquid-nav,
-  .liquid-nav__item {
+  .liquid-nav::after,
+  .liquid-nav__item,
+  .liquid-nav__icon,
+  .liquid-nav__indicator {
     transition-duration: 0.01ms;
   }
 }
