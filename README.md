@@ -48,10 +48,10 @@ _Ninguna de estas funcionalidades está implementada todavía: forman parte del 
 - [x] Estructura de carpetas escalable
 - [x] Pantalla de bienvenida inicial con la identidad de marca
 - [x] Modo claro/oscuro según preferencia del sistema
-- [ ] Autenticación multiusuario
-- [x] Conexión técnica con Supabase (cliente configurado, sin autenticación ni tablas todavía)
+- [x] Autenticación multiusuario (registro, confirmación de correo, login, recuperación de contraseña, cierre de sesión)
+- [x] Perfiles privados en Supabase con Row Level Security (cada usuario solo accede a su propio perfil)
 - [ ] Gestión de entrenamientos (fuerza, carrera/cardio, movilidad)
-- [ ] Perfil de usuario y adaptación de planes
+- [ ] Onboarding deportivo y adaptación de planes
 - [ ] Integración con wearables
 
 ## Roadmap inicial

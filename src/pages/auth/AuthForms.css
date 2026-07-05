@@ -1,0 +1,72 @@
+/* Estilos compartidos por las pantallas de autenticación (login, registro,
+   revisa tu correo, recuperación). Reutiliza la tarjeta/fondo de AuthLayout. */
+
+.auth-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xs);
+  margin-bottom: var(--space-sm);
+}
+
+.auth-header__eyebrow {
+  color: var(--color-brand);
+}
+
+.auth-header__title {
+  margin: 0;
+  color: var(--color-text);
+}
+
+.auth-header__description {
+  margin: var(--space-3xs) 0 0;
+  color: var(--color-text-secondary);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.auth-alert {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-control);
+  text-align: left;
+}
+
+.auth-alert--error {
+  background: var(--color-error-soft);
+  color: var(--color-error);
+}
+
+.auth-alert--success {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin-top: var(--space-sm);
+}
+
+.auth-links a,
+.auth-links button {
+  color: var(--color-brand);
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.auth-email-highlight {
+  font-weight: 600;
+  color: var(--color-text);
+  word-break: break-all;
+}

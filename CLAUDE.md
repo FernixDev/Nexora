@@ -35,6 +35,10 @@ Este archivo es el contexto de referencia para cualquier agente (Claude u otro) 
 - `.env.local` nunca se versiona ni se incluye en un commit; usa siempre `.env.example` como referencia.
 - La seguridad de los datos futuros debe basarse en Row Level Security (RLS) y políticas explícitas, nunca en desactivar RLS para "hacer funcionar" algo.
 - Ningún agente debe imprimir credenciales completas (URLs con tokens, claves, valores de `.env.local`) en respuestas, commits o logs.
+- Toda tabla con datos de usuario debe tener RLS habilitado desde el momento en que se crea, no añadido después.
+- Cualquier tabla privada debe tener una estrategia explícita de autorización (policies concretas), no depender de RLS "por defecto" ni de suposiciones.
+- Las políticas de RLS deben probarse con más de un usuario antes de darlas por buenas (acceso propio permitido, acceso ajeno denegado, acceso anónimo denegado).
+- El frontend nunca debe ser la única barrera de acceso a datos: cualquier filtro de seguridad debe existir en PostgreSQL (RLS), no solo en la lógica de React.
 
 ## Stack tecnológico
 
@@ -46,7 +50,7 @@ Este archivo es el contexto de referencia para cualquier agente (Claude u otro) 
 
 ## Estado actual
 
-Este es el andamiaje inicial del proyecto. Existe una pantalla de bienvenida mínima con la identidad de marca (nombre, eslogan y mensaje de bienvenida) y una conexión técnica básica a Supabase (`src/integrations/supabase/client.ts`), sin autenticación, tablas ni esquema todavía. **Todavía no existen**: autenticación, perfiles de usuario, entrenamientos ni ninguna funcionalidad de negocio real. No asumas que existen ni construyas sobre datos de ejemplo como si fueran reales.
+Existe autenticación multiusuario real (registro, confirmación de correo, login, recuperación de contraseña, cierre de sesión) contra Supabase Auth, con una tabla `public.profiles` (1:1 con `auth.users`, creada automáticamente vía trigger) protegida por RLS, y una pantalla privada temporal que solo demuestra que el flujo funciona. **Todavía no existen**: onboarding deportivo (edad, altura, peso, objetivos), entrenamientos, planes ni ningún dashboard definitivo. No asumas que existen ni construyas sobre datos de ejemplo como si fueran reales.
 
 ## Visión funcional futura de Nexora
 

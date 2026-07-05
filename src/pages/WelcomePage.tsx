@@ -1,71 +1,46 @@
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button/Button';
 import { ArrowRightIcon } from '../components/icons';
-import gymBackdrop from '../assets/welcome-gym.jpg';
+import { AuthLayout } from '../layouts/AuthLayout';
 import './WelcomePage.css';
 
-type DemoStatus = 'idle' | 'start' | 'login';
-
-const DEMO_MESSAGES: Record<Exclude<DemoStatus, 'idle'>, string> = {
-  start: 'Muy pronto podrás crear tu cuenta y comenzar tu plan.',
-  login: 'Muy pronto podrás iniciar sesión con tu cuenta.',
-};
-
 export function WelcomePage() {
-  const [status, setStatus] = useState<DemoStatus>('idle');
+  const navigate = useNavigate();
 
   return (
-    <main className="welcome">
-      <div className="welcome-backdrop" aria-hidden="true">
-        <img
-          className="welcome-backdrop__image"
-          src={gymBackdrop}
-          alt=""
-          loading="eager"
-          fetchPriority="high"
-        />
-        <div className="welcome-backdrop__scrim" />
+    <AuthLayout
+      footer={
+        <>
+          <Link className="welcome-dev-link text-small" to="/design-system">
+            Design System (dev)
+          </Link>
+
+          <div className="welcome-signature">
+            <span className="welcome-signature-label">App desarrollada por</span>
+            <span className="welcome-signature-author">FernixDev</span>
+          </div>
+        </>
+      }
+    >
+      <span className="welcome-badge text-label">Nexora</span>
+      <h1 className="welcome-title">Nexora</h1>
+      <p className="welcome-slogan text-label">Tu siguiente versión</p>
+      <p className="welcome-message">
+        Más fuerte.
+        <br />
+        Más lejos.
+        <br />
+        Más tú.
+      </p>
+
+      <div className="welcome-actions">
+        <Button size="large" fullWidth trailingIcon={<ArrowRightIcon />} onClick={() => navigate('/registro')}>
+          Comenzar
+        </Button>
+        <Button variant="ghost" size="medium" fullWidth onClick={() => navigate('/login')}>
+          Ya tengo una cuenta
+        </Button>
       </div>
-
-      <div className="welcome-card glass-strong">
-        <span className="welcome-badge text-label">Nexora</span>
-        <h1 className="welcome-title">Nexora</h1>
-        <p className="welcome-slogan text-label">Tu siguiente versión</p>
-        <p className="welcome-message">
-          Más fuerte.<br />
-          Más lejos.<br />
-          Más tú.
-        </p>
-
-        <div className="welcome-actions">
-          <Button
-            size="large"
-            fullWidth
-            trailingIcon={<ArrowRightIcon />}
-            onClick={() => setStatus('start')}
-          >
-            Comenzar
-          </Button>
-          <Button variant="ghost" size="medium" fullWidth onClick={() => setStatus('login')}>
-            Ya tengo una cuenta
-          </Button>
-        </div>
-
-        {status !== 'idle' && (
-          <p className="welcome-status text-small text-muted" role="status">
-            {DEMO_MESSAGES[status]}
-          </p>
-        )}
-      </div>
-
-      <a className="welcome-dev-link text-small" href="#/design-system">
-        Design System (dev)
-      </a>
-
-      <div className="welcome-signature">
-        <span className="welcome-signature-label">App desarrollada por</span>
-        <span className="welcome-signature-author">FernixDev</span>
-      </div>
-    </main>
+    </AuthLayout>
   );
 }

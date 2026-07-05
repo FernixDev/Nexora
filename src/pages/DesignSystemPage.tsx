@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '../components/Button/Button';
 import { GlassCard } from '../components/GlassCard/GlassCard';
 import { Input } from '../components/Input/Input';
@@ -54,9 +55,9 @@ export function DesignSystemPage() {
           Esta vista no forma parte de la experiencia final de la app. Sirve para revisar
           visualmente los tokens y componentes reutilizables.
         </p>
-        <a className="text-small" href="#">
+        <Link className="text-small" to="/">
           ← Volver a la bienvenida
-        </a>
+        </Link>
       </header>
 
       <section className="ds-section">
