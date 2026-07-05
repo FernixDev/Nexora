@@ -47,6 +47,11 @@ export function WelcomePage() {
       <a className="welcome-dev-link text-small" href="#/design-system">
         Design System (dev)
       </a>
+
+      <div className="welcome-signature">
+        <span className="welcome-signature-label">App desarrollada por</span>
+        <span className="welcome-signature-author">FernixDev</span>
+      </div>
     </main>
   );
 }

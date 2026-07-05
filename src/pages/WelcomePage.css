@@ -57,3 +57,28 @@
 .welcome-dev-link:hover {
   opacity: 1;
 }
+
+.welcome-signature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  margin-top: auto;
+  padding-bottom: env(safe-area-inset-bottom);
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+.welcome-signature-label {
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.welcome-signature-author {
+  font-family: -apple-system, system-ui, 'Courier New', monospace;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--color-brand);
+  opacity: 0.9;
+}
