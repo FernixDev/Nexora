@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../components/Button/Button';
 import { ArrowRightIcon } from '../components/icons';
+import gymBackdrop from '../assets/welcome-gym.jpg';
 import './WelcomePage.css';
 
 type DemoStatus = 'idle' | 'start' | 'login';
@@ -15,6 +16,17 @@ export function WelcomePage() {
 
   return (
     <main className="welcome">
+      <div className="welcome-backdrop" aria-hidden="true">
+        <img
+          className="welcome-backdrop__image"
+          src={gymBackdrop}
+          alt=""
+          loading="eager"
+          fetchPriority="high"
+        />
+        <div className="welcome-backdrop__scrim" />
+      </div>
+
       <div className="welcome-card glass-strong">
         <span className="welcome-badge text-label">Nexora</span>
         <h1 className="welcome-title text-display">Nexora</h1>
