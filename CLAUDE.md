@@ -28,6 +28,14 @@ Este archivo es el contexto de referencia para cualquier agente (Claude u otro) 
 - Nunca añadas trailers `Co-Authored-By` relacionados con IA salvo que el usuario lo pida explícitamente.
 - El desarrollo asistido por IA puede documentarse de forma transparente en `README.md`, pero las herramientas de IA no deben aparecer como autores o coautores de commits en Git.
 
+## Supabase
+
+- El frontend usa únicamente la **Publishable key** (`VITE_SUPABASE_PUBLISHABLE_KEY`) y la **Project URL** (`VITE_SUPABASE_URL`).
+- Nunca uses en el cliente `service_role`, `secret key`, contraseñas de base de datos ni ninguna clave privada.
+- `.env.local` nunca se versiona ni se incluye en un commit; usa siempre `.env.example` como referencia.
+- La seguridad de los datos futuros debe basarse en Row Level Security (RLS) y políticas explícitas, nunca en desactivar RLS para "hacer funcionar" algo.
+- Ningún agente debe imprimir credenciales completas (URLs con tokens, claves, valores de `.env.local`) en respuestas, commits o logs.
+
 ## Stack tecnológico
 
 - React + TypeScript
@@ -38,7 +46,7 @@ Este archivo es el contexto de referencia para cualquier agente (Claude u otro) 
 
 ## Estado actual
 
-Este es el andamiaje inicial del proyecto. Existe una pantalla de bienvenida mínima con la identidad de marca (nombre, eslogan y mensaje de bienvenida). **Todavía no existen**: autenticación, conexión a Supabase, entrenamientos, perfiles de usuario ni ninguna funcionalidad de negocio real. No asumas que existen ni construyas sobre datos de ejemplo como si fueran reales.
+Este es el andamiaje inicial del proyecto. Existe una pantalla de bienvenida mínima con la identidad de marca (nombre, eslogan y mensaje de bienvenida) y una conexión técnica básica a Supabase (`src/integrations/supabase/client.ts`), sin autenticación, tablas ni esquema todavía. **Todavía no existen**: autenticación, perfiles de usuario, entrenamientos ni ninguna funcionalidad de negocio real. No asumas que existen ni construyas sobre datos de ejemplo como si fueran reales.
 
 ## Visión funcional futura de Nexora
 

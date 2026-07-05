@@ -49,7 +49,7 @@ _Ninguna de estas funcionalidades está implementada todavía: forman parte del 
 - [x] Pantalla de bienvenida inicial con la identidad de marca
 - [x] Modo claro/oscuro según preferencia del sistema
 - [ ] Autenticación multiusuario
-- [ ] Conexión con Supabase
+- [x] Conexión técnica con Supabase (cliente configurado, sin autenticación ni tablas todavía)
 - [ ] Gestión de entrenamientos (fuerza, carrera/cardio, movilidad)
 - [ ] Perfil de usuario y adaptación de planes
 - [ ] Integración con wearables
@@ -77,11 +77,13 @@ cd nexora
 npm install
 
 # Copiar las variables de entorno de ejemplo
-cp .env.example .env
+cp .env.example .env.local
 
 # Arrancar el entorno de desarrollo
 npm run dev
 ```
+
+Rellena `.env.local` con la URL y la Publishable key de tu propio proyecto de Supabase (panel de Supabase → Project Settings → API). Nunca uses la `service_role` ni ninguna clave secreta en este archivo, y no lo subas nunca al repositorio.
 
 ## Scripts disponibles
 
