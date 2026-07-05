@@ -1,0 +1,23 @@
+.glass-card {
+  display: block;
+  width: 100%;
+  padding: var(--space-md);
+  border-radius: var(--radius-panel);
+  text-align: left;
+  color: var(--color-text);
+  transition: transform var(--duration-normal) var(--easing-standard),
+    box-shadow var(--duration-normal) var(--easing-standard);
+}
+
+button.glass-card {
+  font: inherit;
+  cursor: pointer;
+}
+
+.glass-card--interactive:hover {
+  transform: translateY(-2px);
+}
+
+.glass-card--interactive:active {
+  transform: translateY(0) scale(0.99);
+}

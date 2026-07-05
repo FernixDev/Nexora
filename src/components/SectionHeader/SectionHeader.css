@@ -1,0 +1,25 @@
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.section-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.section-header__eyebrow {
+  color: var(--color-brand);
+}
+
+.section-header__title {
+  color: var(--color-text);
+}
+
+.section-header__description {
+  color: var(--color-text-secondary);
+}
