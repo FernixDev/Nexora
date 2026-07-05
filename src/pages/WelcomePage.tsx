@@ -29,10 +29,12 @@ export function WelcomePage() {
 
       <div className="welcome-card glass-strong">
         <span className="welcome-badge text-label">Nexora</span>
-        <h1 className="welcome-title text-display">Nexora</h1>
-        <p className="welcome-slogan text-subtitle">Tu siguiente versión</p>
-        <p className="welcome-message text-body text-secondary">
-          Empieza donde estás. Avanza a tu ritmo.
+        <h1 className="welcome-title">Nexora</h1>
+        <p className="welcome-slogan text-label">Tu siguiente versión</p>
+        <p className="welcome-message">
+          Más fuerte.<br />
+          Más lejos.<br />
+          Más tú.
         </p>
 
         <div className="welcome-actions">

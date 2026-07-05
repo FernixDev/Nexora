@@ -85,15 +85,47 @@
 }
 
 .welcome-title {
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-size: clamp(2.5rem, 9vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--color-text);
+  text-transform: uppercase;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+
+  /* Subtle glow effect on brand accent */
+  background: linear-gradient(135deg, var(--color-text) 0%, var(--color-brand) 50%, var(--color-text) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(125, 155, 255, 0.25));
+}
+
+@media (prefers-color-scheme: light) {
+  .welcome-title {
+    filter: drop-shadow(0 0 4px rgba(61, 91, 255, 0.15));
+  }
 }
 
 .welcome-slogan {
   color: var(--color-brand);
+  opacity: 0.85;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  margin: 0;
+  margin-top: var(--space-3xs);
 }
 
 .welcome-message {
-  margin-bottom: var(--space-2xs);
+  margin: 0;
+  margin-top: var(--space-sm);
+  color: var(--color-text-secondary);
+  font-size: clamp(1rem, 3.5vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
 }
 
 .welcome-actions {
