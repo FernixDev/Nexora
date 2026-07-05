@@ -1,47 +1,91 @@
 .bottom-nav-wrap {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: auto 0 0 0;
   display: flex;
-  justify-content: center;
-  padding: 0 var(--space-sm) calc(var(--space-sm) + env(safe-area-inset-bottom));
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding: 0 max(var(--space-sm), env(safe-area-inset-right))
+    calc(var(--space-sm) + env(safe-area-inset-bottom)) max(var(--space-sm), env(safe-area-inset-left));
   pointer-events: none;
   z-index: 40;
 }
 
+/* --- Cápsula de cristal --- */
 .bottom-nav {
+  position: relative;
   pointer-events: auto;
-  display: flex;
+  display: inline-flex;
   align-items: stretch;
-  justify-content: space-between;
   gap: var(--space-3xs);
-  width: 100%;
-  max-width: 28rem;
   padding: var(--space-2xs);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-full);
+  max-width: calc(100vw - 2 * var(--space-sm));
+  border: 1px solid var(--color-glass-border);
+  background: linear-gradient(165deg, var(--color-surface-glass-strong) 0%, var(--color-surface-glass) 100%);
+  box-shadow: var(--elevation-3), inset 0 1px 0 var(--color-glass-highlight),
+    inset 0 -12px 20px -16px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--glass-saturation));
+  transition: max-width var(--duration-normal) var(--easing-standard),
+    box-shadow var(--duration-normal) var(--easing-standard);
 }
 
+/* Reflejo/sheen sutil, sin efecto neón */
+.bottom-nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(120% 60% at 22% -15%, rgba(255, 255, 255, 0.4), transparent 60%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .bottom-nav::before {
+    opacity: 0.16;
+  }
+}
+
+.bottom-nav--open {
+  box-shadow: var(--elevation-3), inset 0 1px 0 var(--color-glass-highlight),
+    inset 0 -12px 24px -16px rgba(0, 0, 0, 0.26);
+}
+
+/* --- Ítems --- */
 .bottom-nav__item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  flex: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-3xs);
-  min-height: 56px;
-  padding: var(--space-2xs) var(--space-3xs);
+  gap: var(--space-2xs);
+  min-height: 48px;
+  max-width: 0;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
   border: none;
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-full);
   background: transparent;
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--easing-standard),
-    color var(--duration-fast) var(--easing-standard);
+  opacity: 0;
+  pointer-events: none;
   -webkit-tap-highlight-color: transparent;
+  transition: max-width var(--duration-normal) var(--easing-standard),
+    padding var(--duration-normal) var(--easing-standard),
+    opacity var(--duration-fast) var(--easing-standard),
+    background-color var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
+}
+
+.bottom-nav__item:focus-visible {
+  border-radius: var(--radius-full);
 }
 
 .bottom-nav__item svg {
+  flex: none;
   width: 22px;
   height: 22px;
 }
@@ -51,16 +95,38 @@
   letter-spacing: 0;
   font-weight: 600;
   font-size: 0.7rem;
+  display: none;
 }
 
+/* El destino activo siempre es visible: es el ancla de la expansión */
 .bottom-nav__item--active {
+  max-width: 220px;
+  padding: var(--space-2xs) var(--space-sm);
+  opacity: 1;
+  pointer-events: auto;
   background: var(--color-brand-soft);
   color: var(--color-brand);
 }
 
+.bottom-nav__item--active .bottom-nav__label {
+  display: inline;
+}
+
+/* Al abrir: en móvil, los destinos inactivos aparecen solo con icono */
+.bottom-nav--open .bottom-nav__item:not(.bottom-nav__item--active) {
+  max-width: 44px;
+  padding: var(--space-2xs);
+  opacity: 1;
+  pointer-events: auto;
+}
+
 @media (min-width: 768px) {
-  .bottom-nav {
-    max-width: 32rem;
-    padding: var(--space-xs);
+  .bottom-nav--open .bottom-nav__item:not(.bottom-nav__item--active) {
+    max-width: 160px;
+    padding: var(--space-2xs) var(--space-sm);
+  }
+
+  .bottom-nav--open .bottom-nav__item:not(.bottom-nav__item--active) .bottom-nav__label {
+    display: inline;
   }
 }

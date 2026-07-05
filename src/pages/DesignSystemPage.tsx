@@ -163,7 +163,7 @@ export function DesignSystemPage() {
         <SectionHeader
           eyebrow="Navegación"
           title="Bottom navigation"
-          description="Demostración con estado local. Cinco destinos futuros de Nexora."
+          description="Cápsula expandible. Toca el destino activo para abrirla, elige otro para navegar, o cierra con clic fuera / Escape."
         />
         <p className="text-small text-muted">Activo: {activeNav}</p>
       </section>
