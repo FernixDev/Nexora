@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '../components/Button/Button';
 import { GlassCard } from '../components/GlassCard/GlassCard';
 import { Input } from '../components/Input/Input';
@@ -6,7 +6,7 @@ import { Badge } from '../components/Badge/Badge';
 import { Progress } from '../components/Progress/Progress';
 import { IconButton } from '../components/IconButton/IconButton';
 import { SectionHeader } from '../components/SectionHeader/SectionHeader';
-import { BottomNav, type BottomNavItem } from '../components/BottomNav/BottomNav';
+import { BottomNav, type BottomNavHandle, type BottomNavItem } from '../components/BottomNav/BottomNav';
 import {
   HomeIcon,
   TrainIcon,
@@ -43,6 +43,7 @@ const COLOR_TOKENS = [
 
 export function DesignSystemPage() {
   const [activeNav, setActiveNav] = useState('home');
+  const bottomNavRef = useRef<BottomNavHandle>(null);
 
   return (
     <main className="ds-page">
@@ -162,13 +163,16 @@ export function DesignSystemPage() {
       <section className="ds-section ds-section--nav">
         <SectionHeader
           eyebrow="Navegación"
-          title="Bottom navigation"
-          description="Cápsula expandible. Toca el destino activo para abrirla, elige otro para navegar, o cierra con clic fuera / Escape."
+          title="Control flotante Liquid Glass"
+          description="Arrástralo por la pantalla con ratón o dedo. Tócalo para abrirlo: la dirección de expansión (horizontal o vertical, izquierda/derecha, arriba/abajo) se decide sola según el espacio disponible. Elige un destino para navegar, o cierra con clic fuera / Escape."
         />
         <p className="text-small text-muted">Activo: {activeNav}</p>
+        <Button variant="secondary" size="small" onClick={() => bottomNavRef.current?.resetPosition()}>
+          Restablecer posición
+        </Button>
       </section>
 
-      <BottomNav items={NAV_ITEMS} activeId={activeNav} onChange={setActiveNav} />
+      <BottomNav ref={bottomNavRef} items={NAV_ITEMS} activeId={activeNav} onChange={setActiveNav} />
     </main>
   );
 }
