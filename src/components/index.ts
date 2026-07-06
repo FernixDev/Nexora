@@ -6,4 +6,6 @@ export { Progress } from './Progress/Progress';
 export { IconButton } from './IconButton/IconButton';
 export { SectionHeader } from './SectionHeader/SectionHeader';
 export { BottomNav, type BottomNavItem } from './BottomNav/BottomNav';
+export { OptionCard } from './OptionCard/OptionCard';
+export { SingleOptionGroup, MultiOptionGroup } from './OptionCard/OptionGroup';
 export * from './icons';

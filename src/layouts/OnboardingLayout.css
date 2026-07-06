@@ -1,0 +1,148 @@
+.onboarding-shell {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* --- Fondo fotográfico, igual tratamiento visual que AuthLayout --- */
+.onboarding-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.onboarding-backdrop__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+  transform: scale(1.03);
+}
+
+.onboarding-backdrop__scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 85% at 50% 12%, transparent 45%, rgba(0, 0, 0, 0.3) 100%),
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.45) 0%,
+      rgba(0, 0, 0, 0.12) 20%,
+      rgba(0, 0, 0, 0.08) 45%,
+      rgba(0, 0, 0, 0.55) 78%,
+      var(--color-bg) 92%
+    );
+}
+
+@media (min-width: 768px) {
+  .onboarding-backdrop {
+    left: 50%;
+    right: auto;
+    width: min(42rem, 100%);
+    transform: translateX(-50%);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+}
+
+/* --- Cabecera: progreso --- */
+.onboarding-header {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--space-md) var(--space-md) var(--space-xs);
+}
+
+@media (min-width: 1024px) {
+  .onboarding-header {
+    max-width: 55rem;
+  }
+}
+
+/* --- Contenido: panel de cristal con scroll propio --- */
+.onboarding-content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-lg);
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .onboarding-content {
+    border-radius: var(--radius-panel);
+    margin-bottom: var(--space-sm);
+    gap: var(--space-xl);
+    padding: var(--space-xl) var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .onboarding-content {
+    max-width: 55rem;
+    gap: var(--space-xl);
+    padding: var(--space-2xl) var(--space-2xl);
+  }
+}
+
+/* --- Pie: navegación Atrás / Continuar --- */
+.onboarding-footer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg) calc(var(--space-md) + var(--safe-area-inset-bottom));
+}
+
+@media (min-width: 1024px) {
+  .onboarding-footer {
+    max-width: 55rem;
+    padding: var(--space-md) var(--space-2xl) calc(var(--space-md) + var(--safe-area-inset-bottom));
+  }
+}
+
+.onboarding-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.onboarding-step__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.onboarding-step__eyebrow {
+  color: var(--color-brand);
+}
+
+.onboarding-step__title {
+  margin: 0;
+  color: var(--color-text);
+}
+
+.onboarding-step__description {
+  margin: 0;
+  color: var(--color-text-secondary);
+}

@@ -50,7 +50,11 @@ Este archivo es el contexto de referencia para cualquier agente (Claude u otro) 
 
 ## Estado actual
 
-Existe autenticación multiusuario real (registro, confirmación de correo, login, recuperación de contraseña, cierre de sesión) contra Supabase Auth, con una tabla `public.profiles` (1:1 con `auth.users`, creada automáticamente vía trigger) protegida por RLS, y una pantalla privada temporal que solo demuestra que el flujo funciona. **Todavía no existen**: onboarding deportivo (edad, altura, peso, objetivos), entrenamientos, planes ni ningún dashboard definitivo. No asumas que existen ni construyas sobre datos de ejemplo como si fueran reales.
+Existe autenticación multiusuario real (registro, confirmación de correo, login, recuperación de contraseña, cierre de sesión) contra Supabase Auth, con una tabla `public.profiles` (1:1 con `auth.users`, creada automáticamente vía trigger) protegida por RLS.
+
+Existe además un onboarding deportivo adaptativo (`/onboarding`) que recoge datos personales (nombre, fecha de nacimiento, altura, peso) y respuestas objetivas sobre el estado físico, experiencia y objetivos del usuario, y los guarda en `public.fitness_profiles` (1:1 con `auth.users`, protegida por RLS). A partir de esas respuestas, Nexora infiere internamente un punto de partida de fuerza y otro de cardio mediante reglas deterministas (ver `src/utils/fitnessInference.ts`); **el usuario nunca elige directamente "principiante/intermedio/avanzado" ni un nivel de fuerza o cardio**. La edad se calcula siempre dinámicamente a partir de `birth_date` (`src/utils/age.ts`); no se almacena ninguna columna `age`. Tras completar el onboarding, `profiles.onboarding_completed` pasa a `true` y el usuario entra en una pantalla privada temporal que muestra su punto de partida.
+
+**Todavía no existen**: entrenamientos, planes guiados, ejercicios, vídeos, calendario, estadísticas ni ningún dashboard definitivo. No asumas que existen ni construyas sobre datos de ejemplo como si fueran reales.
 
 ## Visión funcional futura de Nexora
 

@@ -50,8 +50,9 @@ _Ninguna de estas funcionalidades está implementada todavía: forman parte del 
 - [x] Modo claro/oscuro según preferencia del sistema
 - [x] Autenticación multiusuario (registro, confirmación de correo, login, recuperación de contraseña, cierre de sesión)
 - [x] Perfiles privados en Supabase con Row Level Security (cada usuario solo accede a su propio perfil)
+- [x] Onboarding deportivo adaptativo: recoge datos personales y respuestas objetivas, e infiere un punto de partida de fuerza y de cardio mediante reglas deterministas (el usuario nunca elige su propio nivel)
 - [ ] Gestión de entrenamientos (fuerza, carrera/cardio, movilidad)
-- [ ] Onboarding deportivo y adaptación de planes
+- [ ] Planes de entrenamiento y rutinas guiadas
 - [ ] Integración con wearables
 
 ## Roadmap inicial
