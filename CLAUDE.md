@@ -6,7 +6,7 @@ Este archivo es el contexto de referencia para cualquier agente (Claude u otro) 
 
 - **Nombre:** Nexora
 - **Eslogan:** "Tu siguiente versión"
-- **Objetivo general:** Nexora es una aplicación deportiva multiusuario que acompaña a cada persona en su progreso físico: fuerza, carrera/cardio y movilidad, adaptando los planes a su nivel, estado físico, peso, experiencia y evolución en el tiempo.
+- **Objetivo general:** Nexora es una aplicación deportiva multiusuario y **multideporte** que acompaña a cada persona en su progreso físico en las áreas que elija — fuerza, atletismo, ciclismo, natación y estiramientos —, adaptando los planes a su nivel, estado físico, peso, experiencia y evolución en el tiempo.
 - **Repositorio:** público en GitHub. Cualquier código, commit o archivo debe asumirse visible para cualquier persona.
 
 ## Reglas no negociables
@@ -52,9 +52,27 @@ Este archivo es el contexto de referencia para cualquier agente (Claude u otro) 
 
 Existe autenticación multiusuario real (registro, confirmación de correo, login, recuperación de contraseña, cierre de sesión) contra Supabase Auth, con una tabla `public.profiles` (1:1 con `auth.users`, creada automáticamente vía trigger) protegida por RLS.
 
-Existe además un onboarding deportivo adaptativo (`/onboarding`) que recoge datos personales (nombre, fecha de nacimiento, altura, peso) y respuestas objetivas sobre el estado físico, experiencia y objetivos del usuario, y los guarda en `public.fitness_profiles` (1:1 con `auth.users`, protegida por RLS). A partir de esas respuestas, Nexora infiere internamente un punto de partida de fuerza y otro de cardio mediante reglas deterministas (ver `src/utils/fitnessInference.ts`); **el usuario nunca elige directamente "principiante/intermedio/avanzado" ni un nivel de fuerza o cardio**. La edad se calcula siempre dinámicamente a partir de `birth_date` (`src/utils/age.ts`); no se almacena ninguna columna `age`. Tras completar el onboarding, `profiles.onboarding_completed` pasa a `true` y el usuario entra en una pantalla privada temporal que muestra su punto de partida.
+Existe además un onboarding deportivo adaptativo (`/onboarding`) que recoge datos personales (nombre, fecha de nacimiento, altura, peso), una selección de las áreas deportivas que el usuario quiere trabajar (`public.user_sports`, ver más abajo) y respuestas objetivas sobre el estado físico, experiencia y objetivos del usuario, guardadas en `public.fitness_profiles` (1:1 con `auth.users`, protegida por RLS). A partir de esas respuestas, Nexora infiere internamente un punto de partida de fuerza y otro de cardio mediante reglas deterministas (ver `src/utils/fitnessInference.ts`); **el usuario nunca elige directamente "principiante/intermedio/avanzado" ni un nivel de fuerza o cardio**. La edad se calcula siempre dinámicamente a partir de `birth_date` (`src/utils/age.ts`); no se almacena ninguna columna `age`. Tras completar el onboarding, `profiles.onboarding_completed` pasa a `true` y el usuario entra en una pantalla privada temporal que muestra su punto de partida y sus áreas elegidas.
 
-**Todavía no existen**: entrenamientos, planes guiados, ejercicios, vídeos, calendario, estadísticas ni ningún dashboard definitivo. No asumas que existen ni construyas sobre datos de ejemplo como si fueran reales.
+**Todavía no existen**: entrenamientos, planes guiados, ejercicios, vídeos, calendario, estadísticas, onboarding específico por deporte ni ningún dashboard definitivo. No asumas que existen ni construyas sobre datos de ejemplo como si fueran reales.
+
+## Catálogo deportivo (multideporte)
+
+Nexora es multideporte: un mismo usuario puede elegir varias áreas a la vez (por ejemplo, Fuerza + Ciclismo de montaña + Estiramientos). **No existe deporte principal ni deportes secundarios.** La selección vive en `public.user_sports` (una fila por deporte/disciplina elegida) y el catálogo único de identificadores, etiquetas e iconos está centralizado en `src/utils/sportsCatalog.tsx` (tipos en `src/types/sport.ts`) — cualquier pantalla nueva debe leer de ahí, nunca repetir strings sueltos.
+
+Identificadores internos (estables, en inglés) y su nombre público:
+
+| Interno       | Nombre público    | Disciplinas                    |
+| ------------- | ----------------- | ------------------------------- |
+| `strength`    | Fuerza             | —                                |
+| `athletics`   | Atletismo          | — (incluye caminar, caminar+correr y carrera) |
+| `cycling`     | Ciclismo           | `road` → Carretera, `mtb` → Montaña / MTB |
+| `swimming`    | Natación           | —                                |
+| `stretching`  | Estiramientos      | —                                |
+
+**Nomenclatura:** lo que antes se llamaba "Carrera" en la interfaz ahora es **Atletismo** (incluye caminar, combinar caminata y carrera, y carrera continua); lo que antes se llamaba "Movilidad" ahora es **Estiramientos**. Los códigos internos del punto de partida cardiovascular (`low_impact`, `walk_run`, `running_base`) no cambian solo por este renombrado de cara al usuario.
+
+El onboarding específico de cada deporte (preguntas propias de natación, ciclismo, atletismo o estiramientos) es una **misión futura**: por ahora solo se recoge la selección de áreas de interés, sin cuestionario adicional por deporte.
 
 ## Visión funcional futura de Nexora
 
@@ -65,7 +83,7 @@ Existe además un onboarding deportivo adaptativo (`/onboarding`) que recoge dat
 - Registro de series, repeticiones, peso y progreso a lo largo del tiempo.
 - Vídeos propios de demostración de ejercicios (no contenido de terceros).
 
-### B. Carrera y cardio
+### B. Atletismo
 - Planes adaptados al estado físico de cada usuario.
 - Caminatas para quienes no deben empezar corriendo directamente.
 - Carrera continua.
@@ -74,11 +92,14 @@ Existe además un onboarding deportivo adaptativo (`/onboarding`) que recoge dat
 - Series.
 - Planes organizados por distancia objetivo y meta del usuario.
 
-### C. Movilidad
-- Estiramientos.
+### C. Estiramientos
+- Estiramientos guiados.
 - Ejercicios de movilidad articular.
 - Sesiones de recuperación.
 - Sesiones guiadas paso a paso.
+
+### C.1 Ciclismo y natación
+- Sin contenido específico todavía. El catálogo ya distingue Ciclismo de carretera y de montaña (MTB); Natación no tiene disciplinas propias por ahora.
 
 ### D. Perfil del usuario
 - Cuenta propia por usuario (multiusuario).

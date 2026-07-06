@@ -58,7 +58,7 @@ export const GOAL_OPTIONS = [
   { value: 'build_muscle', label: 'Ganar masa muscular' },
   { value: 'start_running', label: 'Empezar a correr' },
   { value: 'race_distance', label: 'Preparar una distancia' },
-  { value: 'improve_mobility', label: 'Mejorar movilidad' },
+  { value: 'improve_mobility', label: 'Ganar flexibilidad y movilidad' },
 ] as const;
 
 export const AVAILABLE_DAYS_PER_WEEK_OPTIONS = [

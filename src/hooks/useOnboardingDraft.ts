@@ -11,9 +11,10 @@ import type {
   WalkingCapacity,
   WeeklyActivityDays,
 } from '../types/onboarding';
+import type { CyclingDiscipline, Sport } from '../types/sport';
 
 const STORAGE_PREFIX = 'nexora.onboarding.draft.';
-const STEP_COUNT = 7;
+const STEP_COUNT = 8;
 
 /** Datos personales del borrador. Se guardan como texto para controlar los inputs sin fricción. */
 export interface OnboardingPersonalDraft {
@@ -37,9 +38,16 @@ export interface OnboardingAnswersDraft {
   sessionDurationMinutes: SessionDurationMinutes | null;
 }
 
+/** Deportes de interés elegidos por el usuario. discipline solo aplica a cycling. */
+export interface OnboardingSportsDraft {
+  sports: Sport[];
+  cyclingDisciplines: CyclingDiscipline[];
+}
+
 export interface OnboardingDraft {
   step: number;
   personal: OnboardingPersonalDraft;
+  sports: OnboardingSportsDraft;
   answers: OnboardingAnswersDraft;
 }
 
@@ -47,6 +55,7 @@ export function createEmptyDraft(): OnboardingDraft {
   return {
     step: 1,
     personal: { displayName: '', birthDate: '', heightCm: '', currentWeightKg: '' },
+    sports: { sports: [], cyclingDisciplines: [] },
     answers: {
       trainingGap: null,
       walkingCapacity: null,
@@ -76,6 +85,7 @@ function loadDraft(userId: string): OnboardingDraft {
     return {
       step: Math.min(Math.max(parsedStep, 1), STEP_COUNT),
       personal: { ...empty.personal, ...parsed.personal },
+      sports: { ...empty.sports, ...parsed.sports },
       answers: { ...empty.answers, ...parsed.answers },
     };
   } catch {

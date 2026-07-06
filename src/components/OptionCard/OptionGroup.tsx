@@ -6,6 +6,7 @@ interface Option {
   value: string;
   label: string;
   description?: string;
+  icon?: ReactNode;
 }
 
 interface OptionGroupShellProps {
@@ -49,6 +50,7 @@ export function SingleOptionGroup({ legend, name, options, value, onChange, erro
           value={option.value}
           label={option.label}
           description={option.description}
+          icon={option.icon}
           checked={value === option.value}
           onChange={onChange}
         />
@@ -86,6 +88,7 @@ export function MultiOptionGroup({ legend, name, options, values, onChange, erro
           value={option.value}
           label={option.label}
           description={option.description}
+          icon={option.icon}
           checked={values.includes(option.value)}
           onChange={toggle}
         />

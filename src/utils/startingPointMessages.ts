@@ -44,5 +44,5 @@ export const GOAL_LABELS: Record<Goal, string> = {
   build_muscle: 'Ganar masa muscular',
   start_running: 'Empezar a correr',
   race_distance: 'Preparar una distancia',
-  improve_mobility: 'Mejorar movilidad',
+  improve_mobility: 'Ganar flexibilidad y movilidad',
 };

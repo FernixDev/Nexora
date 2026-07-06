@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { CheckIcon } from '../icons';
 import './OptionCard.css';
 
@@ -10,6 +11,8 @@ interface OptionCardProps {
   onChange: (value: string) => void;
   /** 'radio' para selección única, 'checkbox' para selección múltiple. */
   type?: 'radio' | 'checkbox';
+  /** Icono opcional mostrado a la izquierda del texto (ej. catálogo de deportes). */
+  icon?: ReactNode;
 }
 
 /**
@@ -18,7 +21,7 @@ interface OptionCardProps {
  * para conservar semántica de formulario, foco de teclado y lectura por
  * lector de pantalla, con la tarjeta completa como área de toque.
  */
-export function OptionCard({ name, value, label, description, checked, onChange, type = 'radio' }: OptionCardProps) {
+export function OptionCard({ name, value, label, description, checked, onChange, type = 'radio', icon }: OptionCardProps) {
   const inputId = `${name}-${value}`;
 
   return (
@@ -35,6 +38,7 @@ export function OptionCard({ name, value, label, description, checked, onChange,
         checked={checked}
         onChange={() => onChange(value)}
       />
+      {icon && <span className="option-card__icon" aria-hidden="true">{icon}</span>}
       <span className="option-card__body">
         <span className="option-card__label text-body">{label}</span>
         {description && <span className="option-card__description text-small text-secondary">{description}</span>}

@@ -7,8 +7,10 @@ import { AuthLayout } from '../layouts/AuthLayout';
 import { useAuth } from '../hooks/useAuth';
 import { useProfile } from '../hooks/useProfile';
 import { useFitnessProfile } from '../hooks/useFitnessProfile';
+import { useUserSports } from '../hooks/useUserSports';
 import { signOut } from '../services/authService';
 import { CARDIO_STARTING_POINT_COPY, GOAL_LABELS, STRENGTH_STARTING_POINT_COPY } from '../utils/startingPointMessages';
+import { formatUserSportLabel } from '../utils/sportsCatalog';
 import './auth/AuthForms.css';
 import './PrivateHomePage.css';
 
@@ -17,6 +19,7 @@ export function PrivateHomePage() {
   const { user } = useAuth();
   const { profile, status: profileStatus, error: profileError, refresh: refreshProfile } = useProfile();
   const { fitnessProfile, status: fitnessStatus, error: fitnessError, refresh: refreshFitness } = useFitnessProfile();
+  const { userSports, status: sportsStatus, error: sportsError, refresh: refreshSports } = useUserSports();
   const [signingOut, setSigningOut] = useState(false);
 
   async function handleSignOut() {
@@ -26,8 +29,14 @@ export function PrivateHomePage() {
   }
 
   const displayName = profile?.displayName || user?.email || 'Nexora';
-  const loading = profileStatus === 'idle' || profileStatus === 'loading' || fitnessStatus === 'idle' || fitnessStatus === 'loading';
-  const hasError = profileStatus === 'error' || fitnessStatus === 'error';
+  const loading =
+    profileStatus === 'idle' ||
+    profileStatus === 'loading' ||
+    fitnessStatus === 'idle' ||
+    fitnessStatus === 'loading' ||
+    sportsStatus === 'idle' ||
+    sportsStatus === 'loading';
+  const hasError = profileStatus === 'error' || fitnessStatus === 'error' || sportsStatus === 'error';
 
   return (
     <AuthLayout>
@@ -45,7 +54,7 @@ export function PrivateHomePage() {
       {hasError && (
         <>
           <p className="auth-alert auth-alert--error text-small" role="alert">
-            {profileError ?? fitnessError}
+            {profileError ?? fitnessError ?? sportsError}
           </p>
           <Button
             variant="secondary"
@@ -53,6 +62,7 @@ export function PrivateHomePage() {
             onClick={() => {
               refreshProfile();
               refreshFitness();
+              refreshSports();
             }}
           >
             Reintentar
@@ -65,6 +75,23 @@ export function PrivateHomePage() {
           <p className="text-body">
             Hola, <strong>{displayName}</strong>.
           </p>
+
+          <GlassCard level="subtle">
+            <p className="text-label text-secondary">Tus áreas</p>
+            {userSports.length > 0 ? (
+              <div className="private-home__goals">
+                {userSports.map((userSport) => (
+                  <Badge key={`${userSport.sport}-${userSport.discipline ?? 'none'}`} tone="brand">
+                    {formatUserSportLabel(userSport)}
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <p className="text-small text-secondary">
+                Aún no has elegido tus áreas deportivas. Podrás hacerlo próximamente.
+              </p>
+            )}
+          </GlassCard>
 
           <GlassCard level="subtle">
             <p className="text-label text-secondary">Fuerza</p>

@@ -2,7 +2,7 @@
 
 **Tu siguiente versión**
 
-Nexora es una aplicación deportiva multiusuario pensada para acompañar el progreso físico de cada persona: fuerza, carrera/cardio y movilidad, con planes que se adaptan a su nivel, estado físico, peso, experiencia y evolución en el tiempo.
+Nexora es una aplicación deportiva multiusuario y multideporte pensada para acompañar el progreso físico de cada persona en las áreas que elija: fuerza, atletismo, ciclismo, natación y estiramientos, con planes que se adaptan a su nivel, estado físico, peso, experiencia y evolución en el tiempo.
 
 > ⚠️ **Proyecto en desarrollo activo.** Esta es la base técnica inicial del proyecto. Todavía no incluye autenticación, base de datos, entrenamientos reales ni perfiles de usuario funcionales.
 
@@ -10,7 +10,9 @@ Nexora es una aplicación deportiva multiusuario pensada para acompañar el prog
 
 Nexora quiere ser el compañero de entrenamiento que se adapta a ti, no al revés. En lugar de planes genéricos, la idea es construir una experiencia que evolucione contigo: si estás empezando, si vuelves tras una lesión, o si ya tienes experiencia, tu plan debe reflejarlo.
 
-## Funcionalidades previstas
+## Áreas deportivas
+
+Nexora es multideporte: cada usuario elige las áreas que quiere trabajar, sin un deporte principal ni deportes secundarios. El catálogo actual es Fuerza, Atletismo (caminar, combinar caminata y carrera, o correr), Ciclismo (Carretera y Montaña/MTB), Natación y Estiramientos.
 
 ### Fuerza
 - Entrenamientos por grupos musculares.
@@ -18,19 +20,23 @@ Nexora quiere ser el compañero de entrenamiento que se adapta a ti, no al revé
 - Planes guiados con series, repeticiones, peso y seguimiento de progreso.
 - Vídeos propios de demostración de ejercicios.
 
-### Carrera y cardio
+### Atletismo
 - Planes adaptados al estado físico de cada usuario.
 - Caminatas, carrera continua, fartlek, cuestas y series.
 - Planes organizados por distancia y objetivo.
 
-### Movilidad
+### Ciclismo y natación
+- Selección de disciplina disponible para ciclismo (Carretera / Montaña-MTB).
+- Sin planes ni contenido específico todavía.
+
+### Estiramientos
 - Estiramientos, movilidad articular y recuperación.
 - Sesiones guiadas.
 
 ### Perfil de usuario
 - Cuenta propia y datos privados (peso, altura, nivel por disciplina, objetivos, experiencia, limitaciones y progreso).
 
-_Ninguna de estas funcionalidades está implementada todavía: forman parte del roadmap del producto._
+_Salvo la selección de áreas deportivas, ninguna de estas funcionalidades está implementada todavía: forman parte del roadmap del producto._
 
 ## Stack tecnológico
 
@@ -51,6 +57,7 @@ _Ninguna de estas funcionalidades está implementada todavía: forman parte del 
 - [x] Autenticación multiusuario (registro, confirmación de correo, login, recuperación de contraseña, cierre de sesión)
 - [x] Perfiles privados en Supabase con Row Level Security (cada usuario solo accede a su propio perfil)
 - [x] Onboarding deportivo adaptativo: recoge datos personales y respuestas objetivas, e infiere un punto de partida de fuerza y de cardio mediante reglas deterministas (el usuario nunca elige su propio nivel)
+- [x] Selección multideporte: cada usuario elige las áreas que quiere trabajar (Fuerza, Atletismo, Ciclismo con Carretera/MTB, Natación, Estiramientos), sin deporte principal
 - [ ] Gestión de entrenamientos (fuerza, carrera/cardio, movilidad)
 - [ ] Planes de entrenamiento y rutinas guiadas
 - [ ] Integración con wearables

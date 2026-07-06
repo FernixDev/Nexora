@@ -45,6 +45,23 @@
   border-radius: var(--radius-control);
 }
 
+.option-card__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-control);
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+.option-card__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
 .option-card__body {
   flex: 1;
   display: flex;

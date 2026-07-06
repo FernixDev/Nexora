@@ -3,18 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { OnboardingLayout } from '../../layouts/OnboardingLayout';
 import { useAuth } from '../../hooks/useAuth';
 import { useProfile } from '../../hooks/useProfile';
-import { useOnboardingDraft, type OnboardingAnswersDraft, type OnboardingPersonalDraft } from '../../hooks/useOnboardingDraft';
+import {
+  useOnboardingDraft,
+  type OnboardingAnswersDraft,
+  type OnboardingPersonalDraft,
+  type OnboardingSportsDraft,
+} from '../../hooks/useOnboardingDraft';
 import { completeOnboarding } from '../../services/onboardingService';
 import {
   isAvailabilityStepValid,
   isCurrentStateStepValid,
   isGoalsStepValid,
   isPersonalDataStepValid,
+  isSportsStepValid,
   isStrengthStepValid,
   toOnboardingAnswers,
   toOnboardingPersonalData,
+  toUserSportSelections,
 } from './onboardingValidation';
 import { WelcomeStep } from './steps/WelcomeStep';
+import { SportsStep } from './steps/SportsStep';
 import { PersonalDataStep } from './steps/PersonalDataStep';
 import { CurrentStateStep } from './steps/CurrentStateStep';
 import { StrengthStep } from './steps/StrengthStep';
@@ -23,20 +31,36 @@ import { AvailabilityStep } from './steps/AvailabilityStep';
 import { SummaryStep } from './steps/SummaryStep';
 import './Onboarding.css';
 
-const STEP_COUNT = 7;
-const STEP_LABELS = ['Bienvenida', 'Tus datos', 'Estado actual', 'Fuerza', 'Objetivos', 'Disponibilidad', 'Resumen'];
+const STEP_COUNT = 8;
+const STEP_LABELS = [
+  'Bienvenida',
+  'Deportes',
+  'Tus datos',
+  'Estado actual',
+  'Fuerza',
+  'Objetivos',
+  'Disponibilidad',
+  'Resumen',
+];
 
-function isStepValid(step: number, personal: OnboardingPersonalDraft, answers: OnboardingAnswersDraft): boolean {
+function isStepValid(
+  step: number,
+  personal: OnboardingPersonalDraft,
+  sports: OnboardingSportsDraft,
+  answers: OnboardingAnswersDraft,
+): boolean {
   switch (step) {
     case 2:
-      return isPersonalDataStepValid(personal);
+      return isSportsStepValid(sports);
     case 3:
-      return isCurrentStateStepValid(answers);
+      return isPersonalDataStepValid(personal);
     case 4:
-      return isStrengthStepValid(answers);
+      return isCurrentStateStepValid(answers);
     case 5:
-      return isGoalsStepValid(answers);
+      return isStrengthStepValid(answers);
     case 6:
+      return isGoalsStepValid(answers);
+    case 7:
       return isAvailabilityStepValid(answers);
     default:
       return true;
@@ -73,13 +97,17 @@ export function OnboardingPage() {
     setDraft((prev) => ({ ...prev, personal: { ...prev.personal, ...patch } }));
   }
 
+  function updateSports(patch: Partial<OnboardingSportsDraft>) {
+    setDraft((prev) => ({ ...prev, sports: { ...prev.sports, ...patch } }));
+  }
+
   function updateAnswers(patch: Partial<OnboardingAnswersDraft>) {
     setDraft((prev) => ({ ...prev, answers: { ...prev.answers, ...patch } }));
   }
 
   async function handleContinue() {
     if (step < STEP_COUNT) {
-      if (!isStepValid(step, draft.personal, draft.answers)) {
+      if (!isStepValid(step, draft.personal, draft.sports, draft.answers)) {
         setAttemptedNext(true);
         return;
       }
@@ -93,7 +121,8 @@ export function OnboardingPage() {
     try {
       const personalData = toOnboardingPersonalData(draft.personal);
       const answers = toOnboardingAnswers(draft.answers);
-      await completeOnboarding(userId, personalData, answers);
+      const sportSelections = toUserSportSelections(draft.sports);
+      await completeOnboarding(userId, personalData, answers, sportSelections);
       clearDraft();
       navigate('/app', { replace: true });
     } catch (err) {
@@ -123,12 +152,15 @@ export function OnboardingPage() {
       continueLoading={submitting}
     >
       {step === 1 && <WelcomeStep />}
-      {step === 2 && <PersonalDataStep personal={draft.personal} onChange={updatePersonal} showErrors={attemptedNext} />}
-      {step === 3 && <CurrentStateStep answers={draft.answers} onChange={updateAnswers} showErrors={attemptedNext} />}
-      {step === 4 && <StrengthStep answers={draft.answers} onChange={updateAnswers} showErrors={attemptedNext} />}
-      {step === 5 && <GoalsStep answers={draft.answers} onChange={updateAnswers} showErrors={attemptedNext} />}
-      {step === 6 && <AvailabilityStep answers={draft.answers} onChange={updateAnswers} showErrors={attemptedNext} />}
-      {step === 7 && <SummaryStep personal={draft.personal} answers={draft.answers} submissionError={submissionError} />}
+      {step === 2 && <SportsStep sports={draft.sports} onChange={updateSports} showErrors={attemptedNext} />}
+      {step === 3 && <PersonalDataStep personal={draft.personal} onChange={updatePersonal} showErrors={attemptedNext} />}
+      {step === 4 && <CurrentStateStep answers={draft.answers} onChange={updateAnswers} showErrors={attemptedNext} />}
+      {step === 5 && <StrengthStep answers={draft.answers} onChange={updateAnswers} showErrors={attemptedNext} />}
+      {step === 6 && <GoalsStep answers={draft.answers} onChange={updateAnswers} showErrors={attemptedNext} />}
+      {step === 7 && <AvailabilityStep answers={draft.answers} onChange={updateAnswers} showErrors={attemptedNext} />}
+      {step === 8 && (
+        <SummaryStep personal={draft.personal} sports={draft.sports} answers={draft.answers} submissionError={submissionError} />
+      )}
     </OnboardingLayout>
   );
 }

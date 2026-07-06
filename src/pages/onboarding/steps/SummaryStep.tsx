@@ -3,22 +3,25 @@ import { GlassCard } from '../../../components/GlassCard/GlassCard';
 import { calculateAge } from '../../../utils/age';
 import { inferCardioStartingPoint, inferStrengthStartingPoint } from '../../../utils/fitnessInference';
 import { CARDIO_STARTING_POINT_COPY, GOAL_LABELS, STRENGTH_STARTING_POINT_COPY } from '../../../utils/startingPointMessages';
-import { toOnboardingAnswers } from '../onboardingValidation';
-import type { OnboardingAnswersDraft, OnboardingPersonalDraft } from '../../../hooks/useOnboardingDraft';
+import { formatUserSportLabel } from '../../../utils/sportsCatalog';
+import { toOnboardingAnswers, toUserSportSelections } from '../onboardingValidation';
+import type { OnboardingAnswersDraft, OnboardingPersonalDraft, OnboardingSportsDraft } from '../../../hooks/useOnboardingDraft';
 
 interface SummaryStepProps {
   personal: OnboardingPersonalDraft;
+  sports: OnboardingSportsDraft;
   answers: OnboardingAnswersDraft;
   submissionError: string | null;
 }
 
-export function SummaryStep({ personal, answers, submissionError }: SummaryStepProps) {
+export function SummaryStep({ personal, sports, answers, submissionError }: SummaryStepProps) {
   const onboardingAnswers = toOnboardingAnswers(answers);
   const strengthStartingPoint = inferStrengthStartingPoint(onboardingAnswers);
   const cardioStartingPoint = inferCardioStartingPoint(onboardingAnswers);
   const strengthCopy = STRENGTH_STARTING_POINT_COPY[strengthStartingPoint];
   const cardioCopy = CARDIO_STARTING_POINT_COPY[cardioStartingPoint];
   const age = calculateAge(personal.birthDate);
+  const sportSelections = toUserSportSelections(sports);
 
   return (
     <div className="onboarding-step">
@@ -35,6 +38,17 @@ export function SummaryStep({ personal, answers, submissionError }: SummaryStepP
           {submissionError}
         </p>
       )}
+
+      <GlassCard level="subtle">
+        <p className="text-label text-secondary">Tus áreas</p>
+        <div className="onboarding-summary__goals">
+          {sportSelections.map((selection) => (
+            <Badge key={`${selection.sport}-${selection.discipline ?? 'none'}`} tone="brand">
+              {formatUserSportLabel(selection)}
+            </Badge>
+          ))}
+        </div>
+      </GlassCard>
 
       <GlassCard level="subtle">
         <p className="text-label text-secondary">Fuerza</p>

@@ -1,6 +1,7 @@
 import { isValidBirthDate } from '../../utils/age';
-import type { OnboardingAnswersDraft, OnboardingPersonalDraft } from '../../hooks/useOnboardingDraft';
+import type { OnboardingAnswersDraft, OnboardingPersonalDraft, OnboardingSportsDraft } from '../../hooks/useOnboardingDraft';
 import type { OnboardingAnswers, OnboardingPersonalData } from '../../types/onboarding';
+import type { UserSportSelection } from '../../types/sport';
 
 const MIN_HEIGHT_CM = 100;
 const MAX_HEIGHT_CM = 230;
@@ -17,6 +18,12 @@ export function isPersonalDataStepValid(personal: OnboardingPersonalDraft): bool
   const weight = Number(personal.currentWeightKg);
   if (!Number.isFinite(weight) || weight < MIN_WEIGHT_KG || weight > MAX_WEIGHT_KG) return false;
 
+  return true;
+}
+
+export function isSportsStepValid(sports: OnboardingSportsDraft): boolean {
+  if (sports.sports.length === 0) return false;
+  if (sports.sports.includes('cycling') && sports.cyclingDisciplines.length === 0) return false;
   return true;
 }
 
@@ -38,15 +45,37 @@ export function isAvailabilityStepValid(answers: OnboardingAnswersDraft): boolea
 
 export function isOnboardingDraftComplete(
   personal: OnboardingPersonalDraft,
+  sports: OnboardingSportsDraft,
   answers: OnboardingAnswersDraft,
 ): boolean {
   return (
     isPersonalDataStepValid(personal) &&
+    isSportsStepValid(sports) &&
     isCurrentStateStepValid(answers) &&
     isStrengthStepValid(answers) &&
     isGoalsStepValid(answers) &&
     isAvailabilityStepValid(answers)
   );
+}
+
+/**
+ * Expande la selección de deportes del borrador a filas finales: cycling
+ * genera una selección por cada disciplina elegida (road y/o mtb), el resto
+ * de deportes genera una única selección sin disciplina. Solo debe llamarse
+ * cuando `isSportsStepValid` ha devuelto `true`.
+ */
+export function toUserSportSelections(sports: OnboardingSportsDraft): UserSportSelection[] {
+  const selections: UserSportSelection[] = [];
+  for (const sport of sports.sports) {
+    if (sport === 'cycling') {
+      for (const discipline of sports.cyclingDisciplines) {
+        selections.push({ sport: 'cycling', discipline });
+      }
+    } else {
+      selections.push({ sport, discipline: null });
+    }
+  }
+  return selections;
 }
 
 /**
