@@ -11,7 +11,7 @@ import type {
   WalkingCapacity,
   WeeklyActivityDays,
 } from '../types/onboarding';
-import type { CyclingDiscipline, Sport } from '../types/sport';
+import type { CyclingDiscipline, GymCardioDiscipline, Sport } from '../types/sport';
 
 const STORAGE_PREFIX = 'nexora.onboarding.draft.';
 const STEP_COUNT = 8;
@@ -38,10 +38,17 @@ export interface OnboardingAnswersDraft {
   sessionDurationMinutes: SessionDurationMinutes | null;
 }
 
-/** Deportes de interés elegidos por el usuario. discipline solo aplica a cycling. */
+/**
+ * Deportes de interés elegidos por el usuario. cyclingDisciplines solo
+ * aplica si se eligió cycling; gymCardioDisciplines y customGymCardioLabel
+ * solo aplican si se eligió gym_cardio (customGymCardioLabel solo cuando
+ * además se marcó la disciplina 'other').
+ */
 export interface OnboardingSportsDraft {
   sports: Sport[];
   cyclingDisciplines: CyclingDiscipline[];
+  gymCardioDisciplines: GymCardioDiscipline[];
+  customGymCardioLabel: string;
 }
 
 export interface OnboardingDraft {
@@ -55,7 +62,7 @@ export function createEmptyDraft(): OnboardingDraft {
   return {
     step: 1,
     personal: { displayName: '', birthDate: '', heightCm: '', currentWeightKg: '' },
-    sports: { sports: [], cyclingDisciplines: [] },
+    sports: { sports: [], cyclingDisciplines: [], gymCardioDisciplines: [], customGymCardioLabel: '' },
     answers: {
       trainingGap: null,
       walkingCapacity: null,

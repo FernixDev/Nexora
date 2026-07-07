@@ -126,3 +126,21 @@ export function StretchingIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function CardioIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M3 13h3.5l2-6 3 12 2.5-9 1.5 3H21" />
+    </svg>
+  );
+}
+
+export function HomeTrainingIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 11 12 4.5 20 11" />
+      <path d="M6 10v9.5h12V10" />
+      <path d="M9.5 15h5M9.5 13v4M14.5 13v4" />
+    </svg>
+  );
+}

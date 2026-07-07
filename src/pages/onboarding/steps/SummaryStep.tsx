@@ -1,9 +1,10 @@
 import { Badge } from '../../../components/Badge/Badge';
 import { GlassCard } from '../../../components/GlassCard/GlassCard';
+import { UserSportsSummary } from '../../../components/UserSportsSummary/UserSportsSummary';
 import { calculateAge } from '../../../utils/age';
 import { inferCardioStartingPoint, inferStrengthStartingPoint } from '../../../utils/fitnessInference';
 import { CARDIO_STARTING_POINT_COPY, GOAL_LABELS, STRENGTH_STARTING_POINT_COPY } from '../../../utils/startingPointMessages';
-import { formatUserSportLabel } from '../../../utils/sportsCatalog';
+import { toDisplayableUserSport } from '../../../utils/sportsCatalog';
 import { toOnboardingAnswers, toUserSportSelections } from '../onboardingValidation';
 import type { OnboardingAnswersDraft, OnboardingPersonalDraft, OnboardingSportsDraft } from '../../../hooks/useOnboardingDraft';
 
@@ -22,6 +23,9 @@ export function SummaryStep({ personal, sports, answers, submissionError }: Summ
   const cardioCopy = CARDIO_STARTING_POINT_COPY[cardioStartingPoint];
   const age = calculateAge(personal.birthDate);
   const sportSelections = toUserSportSelections(sports);
+  const displayableSports = sportSelections.map(toDisplayableUserSport);
+  const hasStrength = sports.sports.includes('strength');
+  const hasAthletics = sports.sports.includes('athletics');
 
   return (
     <div className="onboarding-step">
@@ -41,26 +45,24 @@ export function SummaryStep({ personal, sports, answers, submissionError }: Summ
 
       <GlassCard level="subtle">
         <p className="text-label text-secondary">Tus áreas</p>
-        <div className="onboarding-summary__goals">
-          {sportSelections.map((selection) => (
-            <Badge key={`${selection.sport}-${selection.discipline ?? 'none'}`} tone="brand">
-              {formatUserSportLabel(selection)}
-            </Badge>
-          ))}
-        </div>
+        <UserSportsSummary entries={displayableSports} />
       </GlassCard>
 
-      <GlassCard level="subtle">
-        <p className="text-label text-secondary">Fuerza</p>
-        <p className="text-heading">{strengthCopy.title}</p>
-        <p className="text-small text-secondary">{strengthCopy.description}</p>
-      </GlassCard>
+      {hasStrength && (
+        <GlassCard level="subtle">
+          <p className="text-label text-secondary">Fuerza</p>
+          <p className="text-heading">{strengthCopy.title}</p>
+          <p className="text-small text-secondary">{strengthCopy.description}</p>
+        </GlassCard>
+      )}
 
-      <GlassCard level="subtle">
-        <p className="text-label text-secondary">Cardio</p>
-        <p className="text-heading">{cardioCopy.title}</p>
-        <p className="text-small text-secondary">{cardioCopy.description}</p>
-      </GlassCard>
+      {hasAthletics && (
+        <GlassCard level="subtle">
+          <p className="text-label text-secondary">Atletismo</p>
+          <p className="text-heading">{cardioCopy.title}</p>
+          <p className="text-small text-secondary">{cardioCopy.description}</p>
+        </GlassCard>
+      )}
 
       <GlassCard level="subtle">
         <p className="text-label text-secondary">Tus datos</p>

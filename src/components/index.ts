@@ -8,4 +8,5 @@ export { SectionHeader } from './SectionHeader/SectionHeader';
 export { BottomNav, type BottomNavItem } from './BottomNav/BottomNav';
 export { OptionCard } from './OptionCard/OptionCard';
 export { SingleOptionGroup, MultiOptionGroup } from './OptionCard/OptionGroup';
+export { UserSportsSummary } from './UserSportsSummary/UserSportsSummary';
 export * from './icons';

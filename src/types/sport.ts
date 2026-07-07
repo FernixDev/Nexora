@@ -1,20 +1,42 @@
 /**
  * Modelo de deportes de Nexora. Un usuario puede elegir varias áreas a la
- * vez (no existe deporte principal ni deportes secundarios). Solo cycling
- * tiene disciplina propia por ahora (road/mtb); el resto no tiene disciplina.
+ * vez (no existe deporte principal ni deportes secundarios). "Cardio" es
+ * puramente una agrupación visual (Atletismo + Ciclismo + Cardio en
+ * gimnasio); no existe como valor de `sport` ni se guarda en ningún sitio.
  */
 
-export type Sport = 'strength' | 'athletics' | 'cycling' | 'swimming' | 'stretching';
+export type Sport =
+  | 'strength'
+  | 'athletics'
+  | 'cycling'
+  | 'gym_cardio'
+  | 'home_training'
+  | 'swimming'
+  | 'stretching';
 
 export type CyclingDiscipline = 'road' | 'mtb';
 
-export interface UserSportSelection {
-  sport: Sport;
-  discipline: CyclingDiscipline | null;
-}
+/** 'other' representa una máquina de cardio que no está en el catálogo estándar. */
+export type GymCardioDiscipline = 'stationary_bike' | 'treadmill' | 'elliptical' | 'stair_climber' | 'other';
 
-export interface UserSport extends UserSportSelection {
+/**
+ * Unión discriminada: solo cycling y gym_cardio pueden llevar disciplina, y
+ * solo gym_cardio con discipline 'other' lleva un nombre personalizado. El
+ * resto de deportes no admite discipline (evita en compilación combinaciones
+ * incoherentes como sport: 'strength' con discipline: 'road').
+ */
+export type UserSportSelection =
+  | { sport: 'cycling'; discipline: CyclingDiscipline }
+  | { sport: 'gym_cardio'; discipline: Exclude<GymCardioDiscipline, 'other'> }
+  | { sport: 'gym_cardio'; discipline: 'other'; customLabel: string }
+  | { sport: Exclude<Sport, 'cycling' | 'gym_cardio'>; discipline: null };
+
+export interface UserSport {
   userId: string;
+  sport: Sport;
+  discipline: CyclingDiscipline | GymCardioDiscipline | null;
+  /** Nombre libre de la máquina de cardio cuando discipline es 'other'; null en cualquier otro caso. */
+  customLabel: string | null;
   createdAt: string;
 }
 
@@ -27,7 +49,8 @@ export interface UserSport extends UserSportSelection {
 export interface UserSportRow {
   user_id: string;
   sport: Sport;
-  discipline: CyclingDiscipline | '';
+  discipline: CyclingDiscipline | GymCardioDiscipline | '';
+  custom_discipline_label: string | null;
   created_at: string;
 }
 
@@ -36,6 +59,7 @@ export function mapUserSportRow(row: UserSportRow): UserSport {
     userId: row.user_id,
     sport: row.sport,
     discipline: row.discipline === '' ? null : row.discipline,
+    customLabel: row.custom_discipline_label,
     createdAt: row.created_at,
   };
 }
@@ -44,9 +68,24 @@ export function mapUserSportRow(row: UserSportRow): UserSport {
 export interface UserSportInsert {
   user_id: string;
   sport: Sport;
-  discipline: CyclingDiscipline | '';
+  discipline: CyclingDiscipline | GymCardioDiscipline | '';
+  custom_discipline_label: string | null;
 }
 
 export function toUserSportInsert(userId: string, selection: UserSportSelection): UserSportInsert {
-  return { user_id: userId, sport: selection.sport, discipline: selection.discipline ?? '' };
+  if (selection.sport === 'gym_cardio' && selection.discipline === 'other') {
+    return {
+      user_id: userId,
+      sport: 'gym_cardio',
+      discipline: 'other',
+      custom_discipline_label: selection.customLabel,
+    };
+  }
+
+  return {
+    user_id: userId,
+    sport: selection.sport,
+    discipline: selection.discipline ?? '',
+    custom_discipline_label: null,
+  };
 }

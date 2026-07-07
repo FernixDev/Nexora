@@ -1,4 +1,5 @@
 import { isValidBirthDate } from '../../utils/age';
+import { isCustomGymCardioLabelValid } from '../../utils/sportsCatalog';
 import type { OnboardingAnswersDraft, OnboardingPersonalDraft, OnboardingSportsDraft } from '../../hooks/useOnboardingDraft';
 import type { OnboardingAnswers, OnboardingPersonalData } from '../../types/onboarding';
 import type { UserSportSelection } from '../../types/sport';
@@ -24,6 +25,14 @@ export function isPersonalDataStepValid(personal: OnboardingPersonalDraft): bool
 export function isSportsStepValid(sports: OnboardingSportsDraft): boolean {
   if (sports.sports.length === 0) return false;
   if (sports.sports.includes('cycling') && sports.cyclingDisciplines.length === 0) return false;
+
+  if (sports.sports.includes('gym_cardio')) {
+    if (sports.gymCardioDisciplines.length === 0) return false;
+    if (sports.gymCardioDisciplines.includes('other') && !isCustomGymCardioLabelValid(sports.customGymCardioLabel)) {
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -59,9 +68,9 @@ export function isOnboardingDraftComplete(
 }
 
 /**
- * Expande la selección de deportes del borrador a filas finales: cycling
- * genera una selección por cada disciplina elegida (road y/o mtb), el resto
- * de deportes genera una única selección sin disciplina. Solo debe llamarse
+ * Expande la selección de deportes del borrador a filas finales: cycling y
+ * gym_cardio generan una selección por cada disciplina elegida, el resto de
+ * deportes genera una única selección sin disciplina. Solo debe llamarse
  * cuando `isSportsStepValid` ha devuelto `true`.
  */
 export function toUserSportSelections(sports: OnboardingSportsDraft): UserSportSelection[] {
@@ -70,6 +79,14 @@ export function toUserSportSelections(sports: OnboardingSportsDraft): UserSportS
     if (sport === 'cycling') {
       for (const discipline of sports.cyclingDisciplines) {
         selections.push({ sport: 'cycling', discipline });
+      }
+    } else if (sport === 'gym_cardio') {
+      for (const discipline of sports.gymCardioDisciplines) {
+        if (discipline === 'other') {
+          selections.push({ sport: 'gym_cardio', discipline: 'other', customLabel: sports.customGymCardioLabel.trim() });
+        } else {
+          selections.push({ sport: 'gym_cardio', discipline });
+        }
       }
     } else {
       selections.push({ sport, discipline: null });

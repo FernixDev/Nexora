@@ -8,7 +8,7 @@ import { mapUserSportRow, toUserSportInsert, type UserSport, type UserSportRow, 
 export async function getUserSports(userId: string): Promise<UserSport[]> {
   const { data, error } = await supabase
     .from('user_sports')
-    .select('user_id, sport, discipline, created_at')
+    .select('user_id, sport, discipline, custom_discipline_label, created_at')
     .eq('user_id', userId);
 
   if (error) throw error;
